@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lana Bronze | Bronzeamento Natural em São Luís - MA</title>
+<meta name="description" content="Especialista em Banho de Lua (Tradicional ao Antialérgico) e Retoques em São Luís - MA. Agende seu horário via WhatsApp.">
+
+<!-- barra do navegador no celular na cor da marca -->
+<meta name="theme-color" content="#FFF8EF">
+
+<!-- abre a conexão com o servidor de imagens antes de precisar dela,
+     fazendo as fotos carregarem visivelmente mais rápido no 4G -->
+<link rel="preconnect" href="https://xahdtfrjcogvkmgelsre.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://xahdtfrjcogvkmgelsre.supabase.co">
+
+<!-- compartilhamento no WhatsApp / redes -->
+<meta property="og:title" content="Lana Bronze | Bronzeamento Natural em São Luís - MA">
+<meta property="og:description" content="Banho de Lua do tradicional ao antialérgico e retoques com produtos profissionais. Agende pelo WhatsApp.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+
+<!-- As fotos deste site são carregadas do painel ADM (admin.html) — não é preciso editar este arquivo pra trocar imagens. -->
+
+<style>
+  :root{
+    /* ---- PALETA (extraída da marca real: marrom do "Promoção!",
+       dourado do produto, terracota do biquíni) ---- */
+    --areia:      #FFF8EF;   /* fundo base, tom de areia clara */
+    --areia-2:    #F5E6D3;   /* fundo alternado, mais quente */
+    --umbra:      #5C3A24;   /* marrom profundo — títulos */
+    --umbra-2:    #3A2415;   /* quase preto, texto de leitura */
+    --cobre:      #C1652F;   /* terracota — acentos, CTAs */
+    --dourado:    #E8A33D;   /* dourado do produto — destaques */
+    --dourado-suave: #F2C879;
+    --linha:      rgba(92,58,36,0.15);
+
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  @font-face{
+    font-family:'Fraunces';
+    src: local('Fraunces');
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{
+    scroll-behavior:smooth;
+    /* impede que o título da seção fique escondido atrás do
+       header fixo ao clicar nos links do menu */
+    scroll-padding-top:84px;
+    -webkit-text-size-adjust:100%;
+  }
+
+  /* respeita quem desativou animações no sistema */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *, *::before, *::after{
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+    }
+  }
+
+  body{
+    font-family: var(--sans);
+    background: var(--areia);
+    color: var(--umbra-2);
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+  }
+
+  img{ max-width:100%; display:block; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  h1,h2,h3{
+    font-family: var(--serif);
+    font-weight:600;
+    color: var(--umbra);
+    letter-spacing:-0.01em;
+  }
+
+  .container{
+    width:100%;
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--sans);
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    font-size:0.72rem;
+    font-weight:600;
+    color: var(--cobre);
+    display:inline-block;
+    margin-bottom:14px;
+  }
+
+  /* ---------- REVEAL ON SCROLL ---------- */
+  .reveal{
+    opacity:0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.is-visible{
+    opacity:1;
+    transform: translateY(0);
+  }
+
+  /* ---------- IMAGE PLACEHOLDER (temporário) ---------- */
+  .img-placeholder{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:
+      repeating-linear-gradient(135deg,
+        var(--dourado-suave) 0px, var(--dourado-suave) 2px,
+        transparent 2px, transparent 14px),
+      linear-gradient(160deg, var(--areia-2), #EAD3B4);
+    border:1.5px dashed var(--cobre);
+    border-radius:14px;
+    color: var(--umbra);
+    font-family: var(--sans);
+    font-size:0.75rem;
+    font-weight:500;
+    padding:14px;
+    line-height:1.4;
+  }
+  .img-placeholder::before{
+    content:"☀︎";
+    display:block;
+    font-size:1.3rem;
+    margin-bottom:5px;
+    color: var(--cobre);
+  }
+  .img-placeholder span.tag{
+    display:block;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    font-size:0.65rem;
+    color: var(--cobre);
+    margin-top:6px;
+    font-weight:700;
+  }
+  /* quando a foto já foi enviada pelo painel ADM, o placeholder
+     vira uma moldura simples pra imagem real */
+  .img-placeholder.has-image{
+    border:none;
+    background:none;
+    padding:0;
+    display:block;
+  }
+  .img-placeholder.has-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:inherit;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    background: rgba(255,248,239,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--linha);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 24px;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  .logo{
+    font-family: var(--serif);
+    font-size:1.3rem;
+    font-weight:700;
+    color: var(--umbra);
+  }
+  .logo em{ color: var(--cobre); font-style:normal; }
+  .nav-links{
+    display:none;
+    gap:32px;
+    font-size:0.85rem;
+    font-weight:500;
+    letter-spacing:0.02em;
+  }
+  .nav-links a:hover{ color: var(--cobre); }
+  .nav-cta{
+    background: var(--cobre);
+    color:#fff;
+    padding:10px 20px;
+    border-radius:100px;
+    font-size:0.8rem;
+    font-weight:600;
+    white-space:nowrap;
+    min-height:40px;
+    display:inline-flex;
+    align-items:center;
+  }
+  @media(min-width:820px){
+    .nav-links{ display:flex; }
+  }
+  /* header enxuto no celular pra sobrar mais tela pro conteúdo */
+  @media(max-width:560px){
+    .nav{ padding:12px 18px; }
+    .logo{ font-size:1.15rem; }
+    .nav-cta{ padding:9px 17px; font-size:0.78rem; }
+    html{ scroll-padding-top:70px; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:auto;
+    display:flex;
+    align-items:center;
+    padding:130px 0 70px;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(232,163,61,0.35), transparent 55%),
+      radial-gradient(circle at 10% 90%, rgba(193,101,47,0.25), transparent 50%),
+      var(--areia);
+    position:relative;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:44px;
+    align-items:center;
+  }
+  @media(min-width:900px){
+    .hero-grid{ grid-template-columns:1.1fr 0.9fr; }
+  }
+  .hero-eyebrow{
+    font-size:0.75rem;
+  }
+  .hero h1{
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    line-height:1.05;
+    margin-bottom:20px;
+  }
+  .hero h1 .accent{ color: var(--cobre); font-style:italic; }
+  .hero p.lead{
+    font-size:1.05rem;
+    color: var(--umbra-2);
+    max-width:480px;
+    margin-bottom:30px;
+    opacity:0.9;
+  }
+  .cta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:15px 28px;
+    border-radius:100px;
+    font-weight:600;
+    font-size:0.9rem;
+    min-height:48px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .btn-primary{
+    background: var(--cobre);
+    color:#fff;
+    box-shadow:0 10px 24px rgba(193,101,47,0.35);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 28px rgba(193,101,47,0.45); }
+  .btn-ghost{
+    border:1.5px solid var(--umbra);
+    color: var(--umbra);
+  }
+  .btn-ghost:hover{ background: var(--umbra); color:#fff; }
+
+  .hero-photo{
+    aspect-ratio: 4/5;
+    width:100%;
+    max-width:340px;
+    margin:0 auto;
+  }
+
+  .hero-strip{
+    margin-top:40px;
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    font-size:0.78rem;
+    color: var(--umbra);
+    font-weight:500;
+  }
+  .hero-strip span{ display:flex; align-items:center; gap:6px; }
+  .hero-strip span::before{
+    content:"";
+    width:6px; height:6px;
+    border-radius:50%;
+    background: var(--dourado);
+  }
+
+  /* ---------- GRADIENT DIVIDER (assinatura visual) ----------
+     Faixa que remete à evolução do tom de pele no processo de
+     bronzeamento — do mais claro ao mais dourado. Usada como
+     elemento de transição entre seções. */
+  .tan-divider{
+    height:10px;
+    width:100%;
+    background: linear-gradient(90deg,
+      #F5E1C8 0%, #E8C39A 20%, #D9A26C 40%,
+      #C1793E 60%, #A65A2A 80%, #7A3F1D 100%);
+  }
+
+  /* ---------- SECTION BASE ---------- */
+  section{ padding:76px 0; }
+  @media(max-width:640px){
+    section{ padding:52px 0; }
+    .container{ padding:0 18px; }
+    .section-head{ margin-bottom:28px; }
+    .hero{ padding:104px 0 48px; }
+  }
+  .section-head{
+    max-width:620px;
+    margin-bottom:40px;
+  }
+  .section-head h2{
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+  }
+  .section-head p{
+    margin-top:14px;
+    color: var(--umbra-2);
+    opacity:0.85;
+    font-size:1rem;
+  }
+  .bg-alt{ background: var(--areia-2); }
+
+  /* ---------- SOBRE ---------- */
+  .sobre-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:48px;
+    align-items:center;
+  }
+  @media(min-width:900px){
+    .sobre-grid{ grid-template-columns:0.85fr 1.15fr; }
+  }
+  .sobre-photo{ aspect-ratio:1/1; max-width:300px; }
+  .sobre-text p{ margin-bottom:16px; color: var(--umbra-2); }
+  .sobre-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:24px;
+  }
+  .sobre-tags span{
+    border:1px solid var(--linha);
+    background:#fff;
+    padding:8px 16px;
+    border-radius:100px;
+    font-size:0.78rem;
+    font-weight:600;
+    color: var(--umbra);
+  }
+
+  /* ---------- SERVIÇOS ---------- */
+  .servicos-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+  @media(min-width:700px){
+    .servicos-grid{ grid-template-columns:1fr 1fr; }
+  }
+  .servico-card{
+    background:#fff;
+    border:1px solid var(--linha);
+    border-radius:16px;
+    padding:24px 24px 22px;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .servico-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 40px rgba(92,58,36,0.1);
+  }
+  .servico-card .num{
+    font-family: var(--serif);
+    font-size:0.8rem;
+    color: var(--dourado);
+    font-weight:700;
+    letter-spacing:0.05em;
+  }
+  .servico-card h3{
+    font-size:1.2rem;
+    margin:8px 0 8px;
+  }
+  .servico-card p{
+    font-size:0.88rem;
+    color: var(--umbra-2);
+    opacity:0.85;
+    margin-bottom:16px;
+  }
+  /* botão próprio em cada serviço — leva pro WhatsApp já com
+     a mensagem do serviço escolhida, sem o cliente ter que digitar */
+  .servico-acoes{
+    margin-top:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    padding-top:14px;
+    border-top:1px solid var(--linha);
+  }
+  .btn-mini{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background: var(--cobre);
+    color:#fff;
+    padding:9px 18px;
+    border-radius:100px;
+    font-size:0.78rem;
+    font-weight:600;
+    white-space:nowrap;
+    transition: transform 0.2s ease;
+  }
+  .btn-mini:hover{ transform:translateY(-1px); }
+
+  @media(max-width:560px){
+    /* botões ocupam a largura toda — mais fáceis de acertar com o dedo */
+    .cta-row{ flex-direction:column; align-items:stretch; }
+    .cta-row .btn{ width:100%; }
+    .servico-card{ padding:20px 20px 18px; }
+    .servico-card h3{ font-size:1.1rem; }
+    .servico-acoes{ flex-direction:column; align-items:stretch; }
+    .btn-mini{ justify-content:center; min-height:44px; }
+  }
+  .servico-preco{
+    display:inline-block;
+    font-family: var(--serif);
+    font-weight:700;
+    color: var(--cobre);
+    font-size:1.1rem;
+  }
+  .servico-preco small{
+    font-family: var(--sans);
+    font-weight:500;
+    font-size:0.72rem;
+    color: var(--umbra-2);
+    display:block;
+    margin-top:2px;
+  }
+  .servico-card.destaque{
+    background: linear-gradient(160deg, var(--umbra), #4a2c19);
+    color:#fff;
+    border:none;
+  }
+  .servico-card.destaque h3,
+  .servico-card.destaque .num{ color:#fff; }
+  .servico-card.destaque p{ color:#F2E4D2; opacity:0.9; }
+  .servico-card.destaque .servico-preco{ color: var(--dourado-suave); }
+  .servico-card.destaque .servico-preco small{ color:#E6CBA8; }
+  .servico-card.destaque .servico-acoes{ border-top-color: rgba(242,200,121,0.25); }
+  .servico-card.destaque .btn-mini{ background: var(--dourado); color: var(--umbra); }
+  .badge-promo{
+    position:absolute;
+    top:20px; right:20px;
+    background: var(--dourado);
+    color: var(--umbra);
+    font-size:0.68rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    padding:6px 12px;
+    border-radius:100px;
+  }
+
+  /* ---------- GALERIA ---------- */
+  .galeria-grid{
+    display:grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:10px;
+  }
+  @media(min-width:560px){
+    .galeria-grid{ grid-template-columns: repeat(3,1fr); }
+  }
+  @media(min-width:900px){
+    .galeria-grid{ grid-template-columns: repeat(4,1fr); gap:12px; }
+  }
+  .galeria-grid .img-placeholder{
+    aspect-ratio:1/1;
+    font-size:0.68rem;
+    border-radius:10px;
+  }
+  .galeria-grid .img-placeholder span.tag{ display:none; }
+
+  /* ---------- LOCALIZAÇÃO ---------- */
+  .local-box{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:32px;
+    background: var(--umbra);
+    color:#F5E6D3;
+    border-radius:24px;
+    padding:48px 32px;
+  }
+  @media(min-width:800px){
+    .local-box{ grid-template-columns:1.1fr 0.9fr; padding:56px; }
+  }
+  @media(max-width:560px){
+    .local-box{ padding:32px 22px; border-radius:18px; }
+    .cta-final{ padding:64px 0; }
+  }
+  .local-box h2{ color:#fff; }
+  .local-box p{ color:#E6CBA8; margin-top:10px; }
+  .local-list{ margin-top:28px; display:flex; flex-direction:column; gap:16px; }
+  .local-list div{
+    display:flex; gap:14px; align-items:flex-start;
+    font-size:0.92rem;
+  }
+  .local-list .ic{
+    color: var(--dourado);
+    font-size:1.1rem;
+    line-height:1.2;
+  }
+  .local-map-ph{
+    border-radius:16px;
+    border-color: rgba(232,163,61,0.5);
+    background:
+      repeating-linear-gradient(135deg, rgba(232,163,61,0.15) 0px, rgba(232,163,61,0.15) 2px, transparent 2px, transparent 14px),
+      #4a2c19;
+    color:#F5E6D3;
+    min-height:190px;
+  }
+  .local-map-ph span.tag{ color: var(--dourado-suave); }
+
+  /* mapa real do Google, montado a partir do endereço salvo no ADM */
+  .mapa-embed{
+    width:100%;
+    min-height:260px;
+    border:0;
+    border-radius:16px;
+    display:block;
+  }
+  .mapa-link{
+    display:inline-block;
+    margin-top:12px;
+    font-size:0.8rem;
+    font-weight:600;
+    color: var(--dourado-suave);
+    text-decoration:underline;
+  }
+
+  /* quando um espaço de foto está vazio, o layout se ajusta
+     sozinho pra não deixar buraco na página */
+  .hero-grid.sem-foto{ grid-template-columns:1fr; }
+  .sobre-grid.sem-foto{ grid-template-columns:1fr; }
+  .local-box.sem-mapa{ grid-template-columns:1fr; }
+
+  /* ---------- CTA FINAL ---------- */
+  .cta-final{
+    text-align:center;
+    padding:110px 0;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(232,163,61,0.3), transparent 60%),
+      var(--areia-2);
+  }
+  .cta-final h2{
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    max-width:640px;
+    margin:0 auto 18px;
+  }
+  .cta-final p{
+    max-width:480px;
+    margin:0 auto 32px;
+    color: var(--umbra-2);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:48px 24px 100px;
+    text-align:center;
+    color: var(--umbra);
+    font-size:0.82rem;
+  }
+  footer .foot-logo{
+    font-family: var(--serif);
+    font-size:1.2rem;
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  footer .foot-links{
+    display:flex;
+    justify-content:center;
+    gap:22px;
+    margin:16px 0;
+    font-weight:600;
+  }
+  footer .foot-links a:hover{ color: var(--cobre); }
+  footer .foot-note{ opacity:0.6; margin-top:18px; font-size:0.75rem; }
+
+  /* ---------- WHATSAPP FLOAT ---------- */
+  .wa-float{
+    position:fixed;
+    bottom:22px; right:22px;
+    z-index:200;
+    background:#25D366;
+    width:60px; height:60px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 26px rgba(37,211,102,0.45);
+    animation: pulse 2.4s infinite;
+  }
+  .wa-float svg{ width:30px; height:30px; }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(37,211,102,0.5); }
+    70%{ box-shadow:0 0 0 14px rgba(37,211,102,0); }
+    100%{ box-shadow:0 0 0 0 rgba(37,211,102,0); }
+  }
+
+  /* ---------- BARRA FIXA DE AGENDAMENTO (mobile) ----------
+     No celular, o cliente sempre tem o botão de agendar à mão,
+     em qualquer ponto da página. */
+  .barra-mobile{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    z-index:190;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255,248,239,0.96);
+    backdrop-filter: blur(10px);
+    border-top:1px solid var(--linha);
+  }
+  .barra-mobile .txt{
+    font-size:0.74rem;
+    font-weight:600;
+    color: var(--umbra);
+    line-height:1.3;
+  }
+  .barra-mobile .txt small{
+    display:block;
+    font-weight:500;
+    opacity:0.65;
+    font-size:0.68rem;
+  }
+  .barra-mobile a{
+    background: var(--cobre);
+    color:#fff;
+    padding:11px 20px;
+    border-radius:100px;
+    font-size:0.82rem;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  @media(min-width:820px){
+    .barra-mobile{ display:none; }
+  }
+  @media(max-width:819px){
+    /* espaço pro conteúdo não ficar escondido atrás da barra */
+    body{ padding-bottom:76px; }
+    .wa-float{ bottom:88px; width:52px; height:52px; }
+    .wa-float svg{ width:26px; height:26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="nav">
+    <div class="logo">Lana <em>Bronze</em></div>
+    <nav class="nav-links">
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#galeria">Galeria</a>
+      <a href="#local">Localização</a>
+    </nav>
+    <a class="nav-cta" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener">Agendar</a>
+  </div>
+</header>
+
+<!-- ============ SEÇÃO: HERO ============ -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="reveal">
+      <span class="eyebrow hero-eyebrow">São Luís · MA — Bronzeamento Natural</span>
+      <h1>O tom de bronze <span class="accent">certo</span> pra sua pele, sem pressa e sem exagero.</h1>
+      <p class="lead">
+        Especialista em Banho de Lua — do tradicional ao antialérgico — e retoques
+        com produtos profissionais. Cada atendimento é pensado pro seu tipo de
+        pele, com técnica e cuidado.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener">
+          Agendar via WhatsApp
+        </a>
+        <a class="btn btn-ghost" href="#servicos">Ver serviços e valores</a>
+      </div>
+      <div class="hero-strip">
+        <span>Produtos profissionais</span>
+        <span>Antialérgico disponível</span>
+        <span>Vagas limitadas por dia</span>
+      </div>
+    </div>
+
+    <div class="img-placeholder hero-photo reveal" data-slot="hero" data-alt="Lana Bronze">
+      Foto de perfil da Lana<br>ou resultado do bronze (enquadramento amplo)
+      <span class="tag">720×900px sugerido</span>
+    </div>
+  </div>
+</section>
+
+<div class="tan-divider"></div>
+
+<!-- ============ SEÇÃO: SOBRE ============ -->
+<section id="sobre">
+  <div class="container sobre-grid">
+    <div class="img-placeholder sobre-photo reveal" data-slot="sobre" data-alt="Lana Bronze trabalhando">
+      Foto da Lana trabalhando<br>ou do ambiente do estúdio
+      <span class="tag">1:1 quadrada</span>
+    </div>
+    <div class="reveal sobre-text">
+      <span class="eyebrow">Sobre a Lana Bronze</span>
+      <h2>Técnica, escuta e produto certo pra cada pele</h2>
+      <p>
+        Na Lana Bronze, cada bronzeamento começa com uma avaliação de pele —
+        porque nem toda pele reage do mesmo jeito, e o resultado bonito
+        depende disso. É por isso que o atendimento vai do Banho de Lua
+        Tradicional até a versão Antialérgico, pensada pra quem tem pele
+        mais sensível.
+      </p>
+      <p>
+        O trabalho é feito em São Luís, com produtos profissionais e
+        agenda por horário marcado — sem correria, sem cliente em cima de
+        cliente. O foco é o resultado final: um bronze uniforme, natural e
+        que dura.
+      </p>
+      <div class="sobre-tags">
+        <span>Banho de Lua Tradicional</span>
+        <span>Banho de Lua Antialérgico</span>
+        <span>Retoques</span>
+        <span>Produtos Profissionais</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEÇÃO: SERVIÇOS ============ -->
+<section id="servicos" class="bg-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">O que a Lana faz</span>
+      <h2>Serviços</h2>
+      <p>Valores sob consulta conforme avaliação de pele e tipo de serviço — fale com a Lana pelo WhatsApp pra confirmar o seu.</p>
+    </div>
+
+    <div class="servicos-grid">
+      <div class="servico-card reveal">
+        <span class="num">01</span>
+        <h3>Banho de Lua Tradicional</h3>
+        <p>A técnica clássica de bronzeamento a jato, uniforme, com produto profissional e acabamento natural.</p>
+        <div class="servico-acoes">
+          <span class="servico-preco">Sob consulta<small>valor conforme avaliação</small></span>
+          <a class="btn-mini" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20o%20Banho%20de%20Lua%20Tradicional." target="_blank" rel="noopener">Agendar</a>
+        </div>
+      </div>
+
+      <div class="servico-card reveal">
+        <span class="num">02</span>
+        <h3>Banho de Lua Antialérgico</h3>
+        <p>Mesma técnica, com produto formulado pra peles sensíveis — pra quem quer o bronze sem abrir mão do conforto.</p>
+        <div class="servico-acoes">
+          <span class="servico-preco">Sob consulta<small>valor conforme avaliação</small></span>
+          <a class="btn-mini" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20o%20Banho%20de%20Lua%20Antial%C3%A9rgico." target="_blank" rel="noopener">Agendar</a>
+        </div>
+      </div>
+
+      <div class="servico-card reveal">
+        <span class="num">03</span>
+        <h3>Retoques</h3>
+        <p>Manutenção do bronze já feito, pra manter o tom parelho entre uma aplicação e outra.</p>
+        <div class="servico-acoes">
+          <span class="servico-preco">Sob consulta<small>valor conforme avaliação</small></span>
+          <a class="btn-mini" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20um%20retoque." target="_blank" rel="noopener">Agendar</a>
+        </div>
+      </div>
+
+      <div class="servico-card destaque reveal">
+        <span class="badge-promo">Especial da semana</span>
+        <span class="num">04</span>
+        <h3>Bronze Mix Premium + Banho de Lua Tradicional</h3>
+        <p>Combo da promoção da semana — vagas limitadas por dia.</p>
+        <div class="servico-acoes">
+          <span class="servico-preco">R$ 75,00<small>promoção por tempo limitado</small></span>
+          <a class="btn-mini" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20a%20promo%C3%A7%C3%A3o%20de%20R%2475%20(Bronze%20Mix%20Premium%20%2B%20Banho%20de%20Lua)." target="_blank" rel="noopener">Quero a promo</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:36px;" class="reveal">
+      <a class="btn btn-ghost" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Tenho%20uma%20d%C3%BAvida%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener">
+        Tirar uma dúvida antes
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="tan-divider"></div>
+
+<!-- ============ SEÇÃO: GALERIA ============ -->
+<section id="galeria">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Resultados</span>
+      <h2>Galeria</h2>
+      <p>Fotos de resultado, ambiente e produtos usados no dia a dia do estúdio.</p>
+    </div>
+
+    <div class="galeria-grid">
+      <div class="img-placeholder reveal" data-slot="galeria_1" data-alt="Resultado do bronze">Resultado do bronze<span class="tag">antes/depois</span></div>
+      <div class="img-placeholder reveal" data-slot="galeria_2" data-alt="Ambiente do estúdio">Ambiente do estúdio<span class="tag">foto ampla</span></div>
+      <div class="img-placeholder reveal" data-slot="galeria_3" data-alt="Produtos usados">Produtos usados<span class="tag">linha profissional</span></div>
+      <div class="img-placeholder reveal" data-slot="galeria_4" data-alt="Aplicação do bronze">Aplicação do bronze<span class="tag">mão à obra</span></div>
+      <div class="img-placeholder reveal" data-slot="galeria_5" data-alt="Resultado do bronze">Resultado do bronze<span class="tag">antes/depois</span></div>
+      <div class="img-placeholder reveal" data-slot="galeria_6" data-alt="Detalhe / acabamento">Detalhe / acabamento<span class="tag">foto ampla</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEÇÃO: LOCALIZAÇÃO ============ -->
+<section id="local" class="bg-alt">
+  <div class="container">
+    <div class="local-box reveal">
+      <div>
+        <span class="eyebrow" style="color:var(--dourado-suave);">Onde atender</span>
+        <h2>São Luís — MA</h2>
+        <p>Atendimento com horário marcado. Endereço exato é enviado na confirmação do agendamento pelo WhatsApp.</p>
+        <div class="local-list">
+          <div id="linha-endereco" style="display:none;"><span class="ic">⌖</span><span id="txt-endereco"></span></div>
+          <div><span class="ic">✆</span><span>(98) 98627-1989 — agende via WhatsApp</span></div>
+          <div><span class="ic">◎</span><span>@lanabronzeslz_oficial no Instagram</span></div>
+          <div><span class="ic">✦</span><span>Vagas limitadas por dia — agende com antecedência</span></div>
+        </div>
+        <div class="cta-row" style="margin-top:30px;">
+          <a class="btn btn-primary" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener">
+            Agendar horário
+          </a>
+        </div>
+      </div>
+      <!-- Mapa do Google, gerado automaticamente a partir do endereço
+           cadastrado no painel ADM -->
+      <div id="mapa-container" class="reveal" style="display:none;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEÇÃO: CTA FINAL ============ -->
+<section class="cta-final">
+  <div class="container reveal">
+    <span class="eyebrow">Vamos agendar?</span>
+    <h2>Seu bronze ideal está a uma mensagem de distância</h2>
+    <p>Fale com a Lana agora pelo WhatsApp e garanta seu horário — as vagas são limitadas por dia.</p>
+    <a class="btn btn-primary" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener">
+      Chamar no WhatsApp
+    </a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-logo">Lana Bronze</div>
+  <div class="foot-links">
+    <a href="https://wa.me/5598986271989" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://instagram.com/lanabronzeslz_oficial" target="_blank" rel="noopener">Instagram</a>
+  </div>
+  <div class="foot-note">© 2026 Lana Bronze — São Luís, MA. Todos os direitos reservados.</div>
+</footer>
+
+<!-- ============ BARRA FIXA DE AGENDAMENTO (só mobile) ============ -->
+<div class="barra-mobile">
+  <div class="txt">
+    Agende seu horário
+    <small>Vagas limitadas por dia</small>
+  </div>
+  <a href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener">Agendar agora</a>
+</div>
+
+<!-- ============ BOTÃO FLUTUANTE WHATSAPP ============ -->
+<a class="wa-float" href="https://wa.me/5598986271989?text=Oi%20Lana!%20Quero%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.762.462 3.484 1.34 4.997L2 22l5.116-1.334a9.96 9.96 0 004.888 1.246h.004c5.514 0 9.997-4.483 9.997-9.997 0-2.67-1.04-5.18-2.929-7.07a9.935 9.935 0 00-7.072-2.842zm0 18.184h-.003a8.185 8.185 0 01-4.17-1.14l-.299-.178-3.037.792.811-2.96-.195-.304a8.176 8.176 0 01-1.256-4.397c0-4.522 3.68-8.2 8.203-8.2 2.19 0 4.25.854 5.799 2.404a8.14 8.14 0 012.399 5.8c-.002 4.522-3.68 8.183-8.252 8.183z"/></svg>
+</a>
+
+<script>
+  // ---------- REVEAL ON SCROLL ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+<!-- ---------- FOTOS CONECTADAS AO PAINEL ADM (Supabase) ----------
+     Ao publicar uma foto no admin.html, ela aparece aqui automaticamente,
+     sem precisar editar este arquivo nem re-hospedar o site.
+
+     Usa fetch puro (sem biblioteca) — deixa o site mais leve e evita
+     problemas de compatibilidade em ambientes de preview/iframe. -->
+<script>
+  const SUPABASE_URL = 'https://xahdtfrjcogvkmgelsre.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhaGR0ZnJqY29ndmttZ2Vsc3JlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyMzQ2OTMsImV4cCI6MjEwMjgxMDY5M30.kBZaU8BaEvr4QWqa5-CTnPaq8SUZss7fq-3ZSihjvFw';
+
+  // Modo diagnóstico: adicione ?debug=1 no final da URL do site
+  // pra ver no console o que está acontecendo com a conexão.
+  const DEBUG = new URLSearchParams(location.search).has('debug');
+
+  function applyAsset(slot, url){
+    const el = document.querySelector(`[data-slot="${slot}"]`);
+    if(!el || !url) return;
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = el.getAttribute('data-alt') || '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    el.textContent = '';
+    el.appendChild(img);
+    el.classList.add('has-image');
+  }
+
+  // Faz a requisição com até 3 tentativas — cobre falhas passageiras
+  // de rede (sinal fraco, troca de wifi, cold start do servidor).
+  async function buscar(url, headers, tentativas = 3){
+    for (let i = 1; i <= tentativas; i++){
+      try{
+        const res = await fetch(url, { headers, cache: 'no-store' });
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+      }catch(err){
+        if (i === tentativas) throw err;
+        await new Promise(r => setTimeout(r, i * 600));
+      }
+    }
+  }
+
+  async function loadSiteAssets(){
+    const headers = {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+    };
+
+    // ---- FOTOS ----
+    try{
+      const data = await buscar(`${SUPABASE_URL}/rest/v1/site_assets?select=slot,image_url`, headers);
+      data.forEach(row => applyAsset(row.slot, row.image_url));
+    }catch(err){
+      // Falha em silêncio: o visitante vê o site normalmente, só sem as fotos.
+      // Pra diagnosticar, abra o site com ?debug=1 no final da URL.
+      if (DEBUG) console.warn('Fotos não carregadas:', err.message);
+    }
+
+    // Espaços sem foto simplesmente somem do site — nada de moldura vazia
+    document.querySelectorAll('[data-slot]:not(.has-image)').forEach(el => el.remove());
+    ajustarLayoutVazio();
+
+    // ---- ENDEREÇO / MAPA ----
+    try{
+      const settings = {};
+      (await buscar(`${SUPABASE_URL}/rest/v1/site_settings?select=key,value`, headers))
+        .forEach(r => settings[r.key] = r.value);
+      montarMapa(settings.endereco);
+    }catch(err){
+      if (DEBUG) console.warn('Configurações não carregadas:', err.message);
+      montarMapa(null);
+    }
+  }
+
+  // Ajusta o layout das seções que perderam a foto, pra não sobrar buraco
+  function ajustarLayoutVazio(){
+    const heroGrid = document.querySelector('.hero-grid');
+    if(heroGrid && !heroGrid.querySelector('.hero-photo')) heroGrid.classList.add('sem-foto');
+
+    const sobreGrid = document.querySelector('.sobre-grid');
+    if(sobreGrid && !sobreGrid.querySelector('.sobre-photo')) sobreGrid.classList.add('sem-foto');
+
+    // Se nenhuma foto da galeria foi publicada, a seção inteira some
+    const galeria = document.getElementById('galeria');
+    const grid = document.querySelector('.galeria-grid');
+    if(galeria && grid && grid.children.length === 0) galeria.style.display = 'none';
+  }
+
+  // Monta o mapa do Google a partir do endereço cadastrado no painel ADM
+  function montarMapa(endereco){
+    const box = document.querySelector('.local-box');
+    const container = document.getElementById('mapa-container');
+    if(!endereco || !endereco.trim()){
+      if(box) box.classList.add('sem-mapa');
+      return;
+    }
+    const q = encodeURIComponent(endereco.trim());
+
+    // Mostra o endereço escrito na lista de contatos
+    const linha = document.getElementById('linha-endereco');
+    const txt = document.getElementById('txt-endereco');
+    if(linha && txt){ txt.textContent = endereco.trim(); linha.style.display = 'flex'; }
+
+    container.innerHTML = `
+      <iframe class="mapa-embed"
+              src="https://www.google.com/maps?q=${q}&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Localização do estúdio Lana Bronze"></iframe>
+      <a class="mapa-link" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Abrir no Google Maps →</a>
+    `;
+    container.style.display = 'block';
+    container.classList.add('is-visible');
+  }
+
+  loadSiteAssets();
+</script>
+
+</body>
+</html>
