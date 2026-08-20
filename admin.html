@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lana Bronze — Painel ADM</title>
+<meta name="robots" content="noindex, nofollow">
+
+<style>
+  :root{
+    --areia:#FFF8EF; --areia-2:#F5E6D3; --umbra:#5C3A24; --umbra-2:#3A2415;
+    --cobre:#C1652F; --dourado:#E8A33D; --dourado-suave:#F2C879;
+    --linha: rgba(92,58,36,0.15);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Jost','Helvetica Neue',Arial,sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:var(--sans);
+    background:var(--areia);
+    color:var(--umbra-2);
+    min-height:100vh;
+  }
+  h1,h2{ font-family:var(--serif); color:var(--umbra); font-weight:600; }
+
+  /* ---------- TELA DE LOGIN ---------- */
+  #login-screen{
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    background: radial-gradient(circle at 50% 0%, rgba(232,163,61,0.25), transparent 60%), var(--areia);
+  }
+  .login-box{
+    background:#fff;
+    border:1px solid var(--linha);
+    border-radius:20px;
+    padding:40px 32px;
+    width:100%;
+    max-width:380px;
+    box-shadow:0 20px 50px rgba(92,58,36,0.08);
+  }
+  .login-box h1{ font-size:1.6rem; margin-bottom:6px; }
+  .login-box p.sub{ font-size:0.85rem; opacity:0.7; margin-bottom:26px; }
+  label{ display:block; font-size:0.78rem; font-weight:600; color:var(--umbra); margin-bottom:6px; }
+  input[type=email], input[type=password], input[type=text]{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--linha);
+    border-radius:10px;
+    font-family:var(--sans);
+    font-size:0.92rem;
+    margin-bottom:18px;
+    background:#FFFDFB;
+  }
+  input:focus{ outline:2px solid var(--dourado); outline-offset:1px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:100%;
+    padding:13px 20px;
+    border:none;
+    border-radius:100px;
+    background:var(--cobre);
+    color:#fff;
+    font-weight:600;
+    font-size:0.9rem;
+    cursor:pointer;
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 20px rgba(193,101,47,0.3); }
+  .btn:disabled{ opacity:0.6; cursor:not-allowed; transform:none; box-shadow:none; }
+  .btn-secondary{
+    background:transparent;
+    border:1.5px solid var(--umbra);
+    color:var(--umbra);
+  }
+  .btn-secondary:hover{ background:var(--umbra); color:#fff; }
+  .msg{ font-size:0.82rem; margin-top:14px; border-radius:8px; padding:10px 12px; }
+  .msg.erro{ background:#FBE3D8; color:#9A3A16; }
+  .msg.sucesso{ background:#E4F2E1; color:#2E6B23; }
+
+  /* ---------- PAINEL ---------- */
+  #panel-screen{ display:none; }
+  header.topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 24px;
+    background:#fff;
+    border-bottom:1px solid var(--linha);
+    position:sticky; top:0; z-index:10;
+  }
+  header.topbar .logo{ font-family:var(--serif); font-weight:700; color:var(--umbra); font-size:1.15rem; }
+  header.topbar .actions{ display:flex; gap:10px; align-items:center; }
+  header.topbar .btn{ width:auto; padding:9px 18px; font-size:0.8rem; }
+  .wrap{ max-width:960px; margin:0 auto; padding:40px 24px 100px; }
+  .wrap > p.intro{ opacity:0.75; font-size:0.92rem; margin-bottom:36px; max-width:560px; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:20px;
+  }
+  .card{
+    background:#fff;
+    border:1px solid var(--linha);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .card .thumb{
+    aspect-ratio:1/1;
+    background:
+      repeating-linear-gradient(135deg, var(--dourado-suave) 0px, var(--dourado-suave) 2px, transparent 2px, transparent 14px),
+      linear-gradient(160deg, var(--areia-2), #EAD3B4);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .card .thumb img{ width:100%; height:100%; object-fit:cover; }
+  .card .thumb .empty-icon{ font-size:1.8rem; color:var(--cobre); }
+  .card .body{ padding:14px 16px 18px; }
+  .card .slot-name{ font-weight:700; font-size:0.9rem; color:var(--umbra); margin-bottom:2px; }
+  .card .slot-desc{ font-size:0.75rem; opacity:0.65; margin-bottom:12px; }
+  .card input[type=file]{ display:none; }
+  .card .upload-label{
+    display:block;
+    text-align:center;
+    padding:9px 10px;
+    border-radius:8px;
+    border:1.5px dashed var(--cobre);
+    color:var(--cobre);
+    font-size:0.78rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .card .upload-label:hover{ background:#FBE9D6; }
+  .card .status{ font-size:0.72rem; margin-top:8px; text-align:center; min-height:14px; }
+  .card .status.enviando{ color:var(--cobre); }
+  .card .status.ok{ color:#2E6B23; }
+  .card .status.erro-txt{ color:#9A3A16; }
+
+  .remove-btn{
+    display:block;
+    width:100%;
+    margin-top:8px;
+    padding:8px 10px;
+    border:1px solid rgba(154,58,22,0.35);
+    border-radius:8px;
+    background:transparent;
+    color:#9A3A16;
+    font-family:var(--sans);
+    font-size:0.75rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .remove-btn:hover{ background:#FBE3D8; }
+
+  /* ---------- CONFIGURAÇÕES ---------- */
+  .config-box{
+    background:#fff;
+    border:1px solid var(--linha);
+    border-radius:16px;
+    padding:26px 24px 24px;
+    margin-bottom:40px;
+  }
+  .config-box h2{ font-size:1.15rem; margin-bottom:4px; }
+  .config-box p.hint{ font-size:0.8rem; opacity:0.7; margin-bottom:20px; }
+  .config-box input{ margin-bottom:14px; }
+  .config-box .btn{ width:auto; padding:11px 24px; font-size:0.85rem; }
+  .config-box .field-hint{ font-size:0.72rem; opacity:0.6; margin:-10px 0 16px; }
+
+  footer.foot-note{
+    text-align:center; font-size:0.78rem; opacity:0.55; margin-top:40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TELA DE LOGIN ============ -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Painel ADM</h1>
+    <p class="sub">Lana Bronze — acesso restrito</p>
+    <form id="login-form">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" required autocomplete="username">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" required autocomplete="current-password">
+      <button class="btn" type="submit" id="login-btn">Entrar</button>
+    </form>
+    <div id="login-msg"></div>
+  </div>
+</div>
+
+<!-- ============ PAINEL ADM ============ -->
+<div id="panel-screen">
+  <header class="topbar">
+    <div class="logo">Lana <em style="color:var(--cobre); font-style:normal;">Bronze</em> · ADM</div>
+    <div class="actions">
+      <a class="btn btn-secondary" id="ver-site-btn" href="#" target="_blank" style="display:none;">Ver site</a>
+      <button class="btn btn-secondary" id="logout-btn">Sair</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="config-box">
+      <h2>Configurações</h2>
+      <p class="hint">Endereço e link do site publicado.</p>
+      <div id="conexao-status" class="msg" style="margin-bottom:20px; margin-top:0;">Verificando conexão com o banco...</div>
+      <label for="cfg-endereco">Endereço do estúdio</label>
+      <input type="text" id="cfg-endereco" placeholder="Ex: Rua tal, 123 — Bairro, São Luís - MA">
+      <div class="field-hint">O mapa do Google no final do site é gerado automaticamente a partir daqui. Deixe vazio pra não mostrar mapa.</div>
+
+      <label for="cfg-site">Link do site publicado</label>
+      <input type="text" id="cfg-site" placeholder="Ex: https://lanabronze.com.br">
+      <div class="field-hint">É pra onde o botão "Ver site" aqui do painel vai levar.</div>
+
+      <button class="btn" id="salvar-config">Salvar configurações</button>
+      <div id="config-msg"></div>
+    </div>
+
+    <h2 style="margin-bottom:8px;">Fotos do site</h2>
+    <p class="intro">Clique em "Trocar foto" no espaço que você quer atualizar. A imagem é comprimida automaticamente e aparece no site publicado em poucos segundos — sem precisar mexer em código. Espaços sem foto não aparecem pro visitante.</p>
+
+    <div class="grid" id="assets-grid"></div>
+
+    <footer class="foot-note">Alterações feitas aqui refletem direto em lanabronze — não é preciso reenviar arquivos.</footer>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://xahdtfrjcogvkmgelsre.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhaGR0ZnJqY29ndmttZ2Vsc3JlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyMzQ2OTMsImV4cCI6MjEwMjgxMDY5M30.kBZaU8BaEvr4QWqa5-CTnPaq8SUZss7fq-3ZSihjvFw';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Nomes amigáveis pra cada slot que existe no index.html
+  const SLOTS = [
+    { slot:'hero',      label:'Foto principal (topo do site)', desc:'Perfil da Lana ou resultado do bronze' },
+    { slot:'sobre',     label:'Foto da seção Sobre',            desc:'Lana trabalhando / ambiente do estúdio' },
+    { slot:'galeria_1', label:'Galeria — foto 1',                desc:'Resultado do bronze' },
+    { slot:'galeria_2', label:'Galeria — foto 2',                desc:'Ambiente do estúdio' },
+    { slot:'galeria_3', label:'Galeria — foto 3',                desc:'Produtos usados' },
+    { slot:'galeria_4', label:'Galeria — foto 4',                desc:'Aplicação do bronze' },
+    { slot:'galeria_5', label:'Galeria — foto 5',                desc:'Resultado do bronze' },
+    { slot:'galeria_6', label:'Galeria — foto 6',                desc:'Detalhe / acabamento' },
+  ];
+
+  const loginScreen = document.getElementById('login-screen');
+  const panelScreen = document.getElementById('panel-screen');
+  const loginForm = document.getElementById('login-form');
+  const loginMsg = document.getElementById('login-msg');
+  const loginBtn = document.getElementById('login-btn');
+  const grid = document.getElementById('assets-grid');
+
+  // ---------- LOGIN ----------
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginMsg.innerHTML = '';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Entrando...';
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('senha').value;
+
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Entrar';
+
+    if (error) {
+      loginMsg.innerHTML = `<div class="msg erro">Não foi possível entrar: ${error.message === 'Invalid login credentials' ? 'e-mail ou senha incorretos.' : error.message}</div>`;
+      return;
+    }
+    showPanel();
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    location.reload();
+  });
+
+  async function checkSession(){
+    const { data } = await sb.auth.getSession();
+    if (data.session) showPanel();
+  }
+
+  function showPanel(){
+    loginScreen.style.display = 'none';
+    panelScreen.style.display = 'block';
+    testarConexao();
+    renderGrid();
+    loadConfig();
+  }
+
+  // Testa se este navegador/ambiente consegue mesmo falar com o banco,
+  // e mostra o resultado em português no topo do painel.
+  async function testarConexao(){
+    const el = document.getElementById('conexao-status');
+    try{
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_settings?select=key&limit=1`, {
+        headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+        cache: 'no-store'
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      await res.json();
+      el.className = 'msg sucesso';
+      el.textContent = 'Conectado ao banco — as alterações vão pro site normalmente.';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }catch(err){
+      el.className = 'msg erro';
+      el.innerHTML = 'Sem conexão com o banco neste ambiente. Isso acontece quando a página é aberta dentro de um preview/iframe que bloqueia acesso externo. Publique os arquivos na hospedagem (ou abra o arquivo direto no navegador) e tente de novo.';
+    }
+  }
+
+  // ---------- GRID DE FOTOS ----------
+  function renderGrid(){
+    grid.innerHTML = '';
+    SLOTS.forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="thumb" id="thumb-${s.slot}"><span class="empty-icon">☀︎</span></div>
+        <div class="body">
+          <div class="slot-name">${s.label}</div>
+          <div class="slot-desc">${s.desc}</div>
+          <label class="upload-label" for="file-${s.slot}">Trocar foto</label>
+          <input type="file" id="file-${s.slot}" accept="image/*">
+          <button class="remove-btn" id="remove-${s.slot}" style="display:none;">Remover foto</button>
+          <div class="status" id="status-${s.slot}"></div>
+        </div>
+      `;
+      grid.appendChild(card);
+      document.getElementById(`file-${s.slot}`).addEventListener('change', (e) => handleUpload(s.slot, e.target.files[0]));
+      document.getElementById(`remove-${s.slot}`).addEventListener('click', () => handleRemove(s.slot));
+    });
+    loadCurrentImages();
+  }
+
+  async function loadCurrentImages(){
+    const { data, error } = await sb.from('site_assets').select('slot, image_url');
+    if (error) return;
+    data.forEach(row => {
+      if (!row.image_url) return;
+      const thumb = document.getElementById(`thumb-${row.slot}`);
+      const removeBtn = document.getElementById(`remove-${row.slot}`);
+      if (thumb) thumb.innerHTML = `<img src="${row.image_url}" alt="">`;
+      if (removeBtn) removeBtn.style.display = 'block';
+    });
+  }
+
+  // ---------- REMOVER FOTO ----------
+  async function handleRemove(slot){
+    if (!confirm('Remover essa foto do site? O espaço vai deixar de aparecer pro visitante.')) return;
+
+    const statusEl = document.getElementById(`status-${slot}`);
+    statusEl.className = 'status enviando';
+    statusEl.textContent = 'Removendo...';
+
+    try{
+      // Descobre o arquivo atual pra apagar do storage também
+      const { data: row } = await sb.from('site_assets').select('image_url').eq('slot', slot).single();
+
+      const { error: updateError } = await sb
+        .from('site_assets')
+        .update({ image_url: null, updated_at: new Date().toISOString() })
+        .eq('slot', slot);
+      if (updateError) throw updateError;
+
+      // Apaga o arquivo do storage (se falhar, tudo bem — o site já não usa mais)
+      if (row && row.image_url){
+        const nomeArquivo = row.image_url.split('/').pop();
+        await sb.storage.from('site-images').remove([nomeArquivo]);
+      }
+
+      document.getElementById(`thumb-${slot}`).innerHTML = '<span class="empty-icon">☀︎</span>';
+      document.getElementById(`remove-${slot}`).style.display = 'none';
+      statusEl.className = 'status ok';
+      statusEl.textContent = 'Removida do site ✓';
+      setTimeout(() => { statusEl.textContent = ''; }, 3000);
+    }catch(err){
+      statusEl.className = 'status erro-txt';
+      statusEl.textContent = 'Erro ao remover. Tente de novo.';
+      console.error(err);
+    }
+  }
+
+  // ---------- CONFIGURAÇÕES (endereço + link do site) ----------
+  async function loadConfig(){
+    const { data, error } = await sb.from('site_settings').select('key, value');
+    if (error) return;
+    const cfg = {};
+    data.forEach(r => cfg[r.key] = r.value);
+
+    document.getElementById('cfg-endereco').value = cfg.endereco || '';
+    document.getElementById('cfg-site').value = cfg.site_url || '';
+
+    const verSite = document.getElementById('ver-site-btn');
+    if (cfg.site_url && cfg.site_url.trim()){
+      verSite.href = cfg.site_url.trim();
+      verSite.style.display = 'inline-flex';
+    } else {
+      verSite.style.display = 'none';
+    }
+  }
+
+  document.getElementById('salvar-config').addEventListener('click', async () => {
+    const msg = document.getElementById('config-msg');
+    const btn = document.getElementById('salvar-config');
+    const endereco = document.getElementById('cfg-endereco').value.trim();
+    let siteUrl = document.getElementById('cfg-site').value.trim();
+    if (siteUrl && !/^https?:\/\//i.test(siteUrl)) siteUrl = 'https://' + siteUrl;
+
+    btn.disabled = true;
+    btn.textContent = 'Salvando...';
+    msg.innerHTML = '';
+
+    try{
+      const now = new Date().toISOString();
+      const r1 = await sb.from('site_settings').update({ value: endereco || null, updated_at: now }).eq('key', 'endereco');
+      const r2 = await sb.from('site_settings').update({ value: siteUrl || null, updated_at: now }).eq('key', 'site_url');
+      if (r1.error) throw r1.error;
+      if (r2.error) throw r2.error;
+
+      msg.innerHTML = '<div class="msg sucesso">Configurações salvas — o mapa do site já foi atualizado.</div>';
+      loadConfig();
+      setTimeout(() => { msg.innerHTML = ''; }, 4000);
+    }catch(err){
+      msg.innerHTML = '<div class="msg erro">Não foi possível salvar. Tente de novo.</div>';
+      console.error(err);
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'Salvar configurações';
+    }
+  });
+
+  // Comprime a imagem no navegador antes de enviar (mantém o site leve)
+  function compressImage(file, maxSize = 1600, quality = 0.82){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => { img.src = e.target.result; };
+      reader.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxSize) { height = height * (maxSize / width); width = maxSize; }
+        else if (height > maxSize) { width = width * (maxSize / height); height = maxSize; }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+      };
+      img.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleUpload(slot, file){
+    if (!file) return;
+    const statusEl = document.getElementById(`status-${slot}`);
+    statusEl.className = 'status enviando';
+    statusEl.textContent = 'Enviando...';
+
+    try{
+      const compressed = await compressImage(file);
+      const path = `${slot}-${Date.now()}.jpg`;
+
+      const { error: uploadError } = await sb.storage
+        .from('site-images')
+        .upload(path, compressed, { contentType: 'image/jpeg', upsert: false });
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = sb.storage.from('site-images').getPublicUrl(path);
+      const publicUrl = publicUrlData.publicUrl;
+
+      const { error: updateError } = await sb
+        .from('site_assets')
+        .update({ image_url: publicUrl, updated_at: new Date().toISOString() })
+        .eq('slot', slot);
+      if (updateError) throw updateError;
+
+      document.getElementById(`thumb-${slot}`).innerHTML = `<img src="${publicUrl}" alt="">`;
+      document.getElementById(`remove-${slot}`).style.display = 'block';
+      statusEl.className = 'status ok';
+      statusEl.textContent = 'Publicado no site ✓';
+      setTimeout(() => { statusEl.textContent = ''; }, 3000);
+    }catch(err){
+      statusEl.className = 'status erro-txt';
+      statusEl.textContent = 'Erro ao enviar. Tente de novo.';
+      console.error(err);
+    }
+  }
+
+  checkSession();
+</script>
+
+</body>
+</html>
