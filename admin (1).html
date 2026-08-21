@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lana Bronze — Painel ADM</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFF8EF">
+
+<style>
+  :root{
+    --areia:#FFF8EF; --areia-2:#F5E6D3; --umbra:#5C3A24; --umbra-2:#3A2415;
+    --cobre:#C1652F; --dourado:#E8A33D; --dourado-suave:#F2C879;
+    --linha: rgba(92,58,36,0.15);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Jost','Helvetica Neue',Arial,sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ overflow-x:hidden; max-width:100%; }
+  body{
+    font-family:var(--sans);
+    background:var(--areia);
+    color:var(--umbra-2);
+    min-height:100vh;
+    overflow-x:hidden;
+    overflow-wrap:break-word;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:var(--serif); color:var(--umbra); font-weight:600; }
+
+  /* ---------- LOGIN ---------- */
+  #login-screen{
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    background: radial-gradient(circle at 50% 0%, rgba(232,163,61,0.25), transparent 60%), var(--areia);
+  }
+  .login-box{
+    background:#fff; border:1px solid var(--linha); border-radius:20px;
+    padding:40px 32px; width:100%; max-width:380px;
+    box-shadow:0 20px 50px rgba(92,58,36,0.08);
+  }
+  .login-box h1{ font-size:1.6rem; margin-bottom:6px; }
+  .login-box p.sub{ font-size:0.85rem; opacity:0.7; margin-bottom:26px; }
+
+  label{ display:block; font-size:0.78rem; font-weight:600; color:var(--umbra); margin-bottom:6px; }
+  input[type=email], input[type=password], input[type=text], textarea, select{
+    width:100%; padding:12px 14px;
+    border:1px solid var(--linha); border-radius:10px;
+    font-family:var(--sans); font-size:0.92rem;
+    margin-bottom:16px; background:#FFFDFB; color:var(--umbra-2);
+  }
+  textarea{ min-height:100px; resize:vertical; line-height:1.5; }
+  input:focus, textarea:focus, select:focus{ outline:2px solid var(--dourado); outline-offset:1px; }
+  .field-hint{ font-size:0.72rem; opacity:0.6; margin:-11px 0 16px; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:13px 22px; border:none; border-radius:100px;
+    background:var(--cobre); color:#fff;
+    font-family:var(--sans); font-weight:600; font-size:0.88rem;
+    cursor:pointer; min-height:46px;
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 20px rgba(193,101,47,0.3); }
+  .btn:disabled{ opacity:0.6; cursor:not-allowed; transform:none; box-shadow:none; }
+  .btn-block{ width:100%; }
+  .btn-secondary{ background:transparent; border:1.5px solid var(--umbra); color:var(--umbra); }
+  .btn-secondary:hover{ background:var(--umbra); color:#fff; }
+  .btn-sm{ padding:9px 16px; min-height:38px; font-size:0.78rem; }
+
+  .msg{ font-size:0.82rem; margin-top:14px; border-radius:8px; padding:10px 12px; }
+  .msg.erro{ background:#FBE3D8; color:#9A3A16; }
+  .msg.sucesso{ background:#E4F2E1; color:#2E6B23; }
+
+  /* ---------- LAYOUT DO PAINEL ---------- */
+  #panel-screen{ display:none; }
+  header.topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 20px; background:#fff;
+    border-bottom:1px solid var(--linha);
+    position:sticky; top:0; z-index:20;
+  }
+  header.topbar .logo{ font-family:var(--serif); font-weight:700; color:var(--umbra); font-size:1.1rem; }
+  header.topbar .actions{ display:flex; gap:8px; align-items:center; flex-shrink:0; }
+
+  /* abas */
+  .tabs{
+    display:flex; gap:4px; overflow-x:auto;
+    background:#fff; border-bottom:1px solid var(--linha);
+    padding:0 12px; position:sticky; top:63px; z-index:15;
+    -webkit-overflow-scrolling:touch;
+  }
+  .tabs button{
+    background:none; border:none; cursor:pointer;
+    font-family:var(--sans); font-size:0.82rem; font-weight:600;
+    color:var(--umbra-2); opacity:0.6;
+    padding:14px 14px; white-space:nowrap;
+    border-bottom:2px solid transparent;
+  }
+  .tabs button.ativa{ opacity:1; color:var(--cobre); border-bottom-color:var(--cobre); }
+
+  .wrap{ max-width:860px; margin:0 auto; padding:28px 20px 140px; }
+  .painel{ display:none; }
+  .painel.ativo{ display:block; }
+
+  .bloco{
+    background:#fff; border:1px solid var(--linha);
+    border-radius:16px; padding:24px 22px; margin-bottom:20px;
+  }
+  .bloco h2{ font-size:1.1rem; margin-bottom:4px; }
+  .bloco p.hint{ font-size:0.8rem; opacity:0.7; margin-bottom:20px; }
+
+  /* barra de salvar fixa */
+  .savebar{
+    position:fixed; bottom:0; left:0; right:0; z-index:30;
+    background:rgba(255,248,239,0.97); backdrop-filter:blur(10px);
+    border-top:1px solid var(--linha);
+    padding:12px 20px calc(12px + env(safe-area-inset-bottom));
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .savebar .info{ font-size:0.76rem; opacity:0.7; min-width:0; }
+  .savebar .btn{ flex-shrink:0; }
+
+  /* ---------- FOTOS ---------- */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px; }
+  .card{ background:#fff; border:1px solid var(--linha); border-radius:14px; overflow:hidden; }
+  .card .thumb{
+    aspect-ratio:1/1;
+    background:
+      repeating-linear-gradient(135deg, var(--dourado-suave) 0px, var(--dourado-suave) 2px, transparent 2px, transparent 14px),
+      linear-gradient(160deg, var(--areia-2), #EAD3B4);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .card .thumb .empty-icon{ font-size:1.6rem; color:var(--cobre); }
+  .card .body{ padding:12px 14px 16px; }
+  .card .slot-name{ font-weight:700; font-size:0.86rem; color:var(--umbra); }
+  .card .slot-desc{ font-size:0.72rem; opacity:0.65; margin-bottom:10px; }
+  .card input[type=file]{ display:none; }
+  .upload-label{
+    display:block; text-align:center; padding:9px 10px; border-radius:8px;
+    border:1.5px dashed var(--cobre); color:var(--cobre);
+    font-size:0.76rem; font-weight:600; cursor:pointer;
+  }
+  .upload-label:hover{ background:#FBE9D6; }
+  .remove-btn{
+    display:none; width:100%; margin-top:7px; padding:8px 10px;
+    border:1px solid rgba(154,58,22,0.35); border-radius:8px;
+    background:transparent; color:#9A3A16;
+    font-family:var(--sans); font-size:0.74rem; font-weight:600; cursor:pointer;
+  }
+  .remove-btn:hover{ background:#FBE3D8; }
+  .status{ font-size:0.71rem; margin-top:7px; text-align:center; min-height:13px; }
+  .status.enviando{ color:var(--cobre); }
+  .status.ok{ color:#2E6B23; }
+  .status.erro-txt{ color:#9A3A16; }
+
+  /* ---------- COMBOS ---------- */
+  .combo-item{
+    border:1px solid var(--linha); border-radius:14px;
+    padding:18px 16px; margin-bottom:14px; background:#FFFDFB;
+  }
+  .combo-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; margin-bottom:14px;
+  }
+  .combo-head strong{ font-size:0.86rem; color:var(--umbra); }
+  .combo-acoes{ display:flex; gap:6px; flex-shrink:0; }
+  .icon-btn{
+    border:1px solid var(--linha); background:#fff; border-radius:8px;
+    width:34px; height:34px; cursor:pointer; font-size:0.9rem;
+    color:var(--umbra); line-height:1;
+  }
+  .icon-btn:hover{ background:var(--areia-2); }
+  .icon-btn.danger{ color:#9A3A16; border-color:rgba(154,58,22,0.3); }
+  .linha-dupla{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media(max-width:520px){ .linha-dupla{ grid-template-columns:1fr; } }
+  .check-linha{
+    display:flex; align-items:center; gap:9px;
+    margin-bottom:14px; font-size:0.85rem; font-weight:600; color:var(--umbra);
+  }
+  .check-linha input{ width:18px; height:18px; margin:0; accent-color:var(--cobre); }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Painel ADM</h1>
+    <p class="sub">Lana Bronze — acesso restrito</p>
+    <form id="login-form">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" required autocomplete="username">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" required autocomplete="current-password">
+      <button class="btn btn-block" type="submit" id="login-btn">Entrar</button>
+    </form>
+    <div id="login-msg"></div>
+  </div>
+</div>
+
+<!-- ============ PAINEL ============ -->
+<div id="panel-screen">
+  <header class="topbar">
+    <div class="logo">Lana <em style="color:var(--cobre); font-style:normal;">Bronze</em> · ADM</div>
+    <div class="actions">
+      <a class="btn btn-secondary btn-sm" id="ver-site-btn" href="#" target="_blank" style="display:none;">Ver site</a>
+      <button class="btn btn-secondary btn-sm" id="logout-btn">Sair</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-aba="fotos" class="ativa">Fotos</button>
+    <button data-aba="topo">Topo</button>
+    <button data-aba="sobre">Sobre</button>
+    <button data-aba="combos">Combos</button>
+    <button data-aba="curso">Curso</button>
+    <button data-aba="local">Localização</button>
+    <button data-aba="contato">Contato</button>
+    <button data-aba="geral">Geral</button>
+  </nav>
+
+  <div class="wrap">
+    <div id="conexao-status" class="msg" style="margin:0 0 18px;">Verificando conexão...</div>
+
+    <!-- ---------- ABA: FOTOS ---------- -->
+    <section class="painel ativo" id="aba-fotos">
+      <div class="bloco">
+        <h2>Fotos do site</h2>
+        <p class="hint">Clique em "Trocar foto" no espaço que quiser atualizar. A imagem é comprimida sozinha e entra no site na hora. Espaço sem foto não aparece pro visitante.</p>
+        <div class="grid" id="assets-grid"></div>
+      </div>
+    </section>
+
+    <!-- ---------- ABA: TOPO ---------- -->
+    <section class="painel" id="aba-topo">
+      <div class="bloco">
+        <h2>Topo do site</h2>
+        <p class="hint">A primeira coisa que a cliente vê ao abrir a página.</p>
+
+        <label for="hero_eyebrow">Linha pequena acima do título</label>
+        <input type="text" id="hero_eyebrow" data-cfg="hero_eyebrow">
+
+        <label for="hero_titulo">Título principal</label>
+        <textarea id="hero_titulo" data-cfg="hero_titulo" style="min-height:80px;"></textarea>
+
+        <label for="hero_texto">Texto de apresentação</label>
+        <textarea id="hero_texto" data-cfg="hero_texto"></textarea>
+
+        <label for="hero_selos">Selos de destaque</label>
+        <input type="text" id="hero_selos" data-cfg="hero_selos">
+        <div class="field-hint">Separe cada selo com o sinal | (barra vertical). Ex: Combos a partir de R$ 75|Aceitamos cartão</div>
+      </div>
+
+      <div class="bloco">
+        <h2>Barra fixa do celular</h2>
+        <p class="hint">Aquela faixa de agendamento que fica sempre visível no rodapé no celular.</p>
+        <label for="barra_titulo">Título</label>
+        <input type="text" id="barra_titulo" data-cfg="barra_titulo">
+        <label for="barra_texto">Linha de baixo</label>
+        <input type="text" id="barra_texto" data-cfg="barra_texto">
+      </div>
+    </section>
+
+    <!-- ---------- ABA: SOBRE ---------- -->
+    <section class="painel" id="aba-sobre">
+      <div class="bloco">
+        <h2>Seção Sobre</h2>
+        <p class="hint">Onde você conta como é o trabalho e o diferencial do atendimento.</p>
+
+        <label for="sobre_titulo">Título</label>
+        <input type="text" id="sobre_titulo" data-cfg="sobre_titulo">
+
+        <label for="sobre_texto">Texto</label>
+        <textarea id="sobre_texto" data-cfg="sobre_texto" style="min-height:180px;"></textarea>
+        <div class="field-hint">Pra separar em parágrafos, use || (duas barras) entre eles.</div>
+
+        <label for="sobre_tags">Etiquetas de serviço</label>
+        <input type="text" id="sobre_tags" data-cfg="sobre_tags">
+        <div class="field-hint">Separe com | — aparecem como pastilhas embaixo do texto.</div>
+      </div>
+    </section>
+
+    <!-- ---------- ABA: COMBOS ---------- -->
+    <section class="painel" id="aba-combos">
+      <div class="bloco">
+        <h2>Combos e serviços</h2>
+        <p class="hint">Adicione, edite, reordene ou remova combos. O botão de cada card abre o WhatsApp já com o nome do combo escrito.</p>
+
+        <label for="combos_titulo">Título da seção</label>
+        <input type="text" id="combos_titulo" data-cfg="combos_titulo">
+
+        <label for="combos_texto">Texto de apoio</label>
+        <textarea id="combos_texto" data-cfg="combos_texto" style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="bloco">
+        <div id="combos-editor"></div>
+        <button class="btn btn-secondary btn-block" id="add-combo" type="button">+ Adicionar combo</button>
+      </div>
+    </section>
+
+    <!-- ---------- ABA: CURSO ---------- -->
+    <section class="painel" id="aba-curso">
+      <div class="bloco">
+        <h2>Curso Personal Bronze</h2>
+        <p class="hint">Desmarque a caixa abaixo se quiser esconder a seção do curso do site.</p>
+
+        <div class="check-linha">
+          <input type="checkbox" id="curso_ativo" data-cfg-check="curso_ativo">
+          <label for="curso_ativo" style="margin:0;">Mostrar seção do curso no site</label>
+        </div>
+
+        <label for="curso_eyebrow">Linha pequena de destaque</label>
+        <input type="text" id="curso_eyebrow" data-cfg="curso_eyebrow">
+
+        <div class="linha-dupla">
+          <div>
+            <label for="curso_titulo">Título</label>
+            <input type="text" id="curso_titulo" data-cfg="curso_titulo">
+          </div>
+          <div>
+            <label for="curso_subtitulo">Destaque dourado</label>
+            <input type="text" id="curso_subtitulo" data-cfg="curso_subtitulo">
+          </div>
+        </div>
+
+        <label for="curso_texto">Descrição</label>
+        <textarea id="curso_texto" data-cfg="curso_texto"></textarea>
+
+        <label for="curso_itens">O que está incluso</label>
+        <textarea id="curso_itens" data-cfg="curso_itens" style="min-height:110px;"></textarea>
+        <div class="field-hint">Separe cada item com | — cada um vira um tópico com estrela.</div>
+
+        <div class="linha-dupla">
+          <div>
+            <label for="curso_de">Preço antigo (riscado)</label>
+            <input type="text" id="curso_de" data-cfg="curso_de">
+          </div>
+          <div>
+            <label for="curso_por">Preço atual</label>
+            <input type="text" id="curso_por" data-cfg="curso_por">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- ABA: LOCALIZAÇÃO ---------- -->
+    <section class="painel" id="aba-local">
+      <div class="bloco">
+        <h2>Localização</h2>
+        <p class="hint">O mapa do Google no final do site é gerado automaticamente pelo endereço.</p>
+
+        <label for="endereco">Endereço do estúdio</label>
+        <input type="text" id="endereco" data-cfg="endereco" placeholder="Ex: Rua tal, 123 — Bairro, São Luís - MA">
+        <div class="field-hint">Deixe vazio pra não mostrar mapa nem endereço no site.</div>
+
+        <label for="local_titulo">Título da seção</label>
+        <input type="text" id="local_titulo" data-cfg="local_titulo">
+
+        <label for="local_texto">Texto</label>
+        <textarea id="local_texto" data-cfg="local_texto"></textarea>
+
+        <label for="local_extra">Última linha da lista de contatos</label>
+        <input type="text" id="local_extra" data-cfg="local_extra">
+      </div>
+
+      <div class="bloco">
+        <h2>Chamada final</h2>
+        <p class="hint">O último convite antes do rodapé.</p>
+        <label for="cta_titulo">Título</label>
+        <input type="text" id="cta_titulo" data-cfg="cta_titulo">
+        <label for="cta_texto">Texto</label>
+        <textarea id="cta_texto" data-cfg="cta_texto"></textarea>
+      </div>
+    </section>
+
+    <!-- ---------- ABA: CONTATO ---------- -->
+    <section class="painel" id="aba-contato">
+      <div class="bloco">
+        <h2>Contatos</h2>
+        <p class="hint">Mudar aqui atualiza todos os botões de WhatsApp e Instagram do site de uma vez.</p>
+
+        <label for="whatsapp">Número do WhatsApp</label>
+        <input type="text" id="whatsapp" data-cfg="whatsapp" placeholder="5598986271989">
+        <div class="field-hint">Com código do país e DDD, só números. Ex: 5598986271989</div>
+
+        <label for="instagram">Usuário do Instagram</label>
+        <input type="text" id="instagram" data-cfg="instagram" placeholder="lanabronzeslz_oficial">
+        <div class="field-hint">Só o nome de usuário, sem o @ e sem o link completo.</div>
+      </div>
+    </section>
+
+    <!-- ---------- ABA: GERAL ---------- -->
+    <section class="painel" id="aba-geral">
+      <div class="bloco">
+        <h2>Marca e galeria</h2>
+
+        <label for="nome_marca">Nome da marca</label>
+        <input type="text" id="nome_marca" data-cfg="nome_marca">
+        <div class="field-hint">Aparece no topo e no rodapé. A segunda palavra fica destacada em cobre.</div>
+
+        <div class="check-linha">
+          <input type="checkbox" id="galeria_ativa" data-cfg-check="galeria_ativa">
+          <label for="galeria_ativa" style="margin:0;">Mostrar galeria de fotos no site</label>
+        </div>
+
+        <label for="galeria_titulo">Título da galeria</label>
+        <input type="text" id="galeria_titulo" data-cfg="galeria_titulo">
+
+        <label for="galeria_texto">Texto da galeria</label>
+        <textarea id="galeria_texto" data-cfg="galeria_texto" style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="bloco">
+        <h2>Link do site</h2>
+        <label for="site_url">Endereço do site publicado</label>
+        <input type="text" id="site_url" data-cfg="site_url" placeholder="https://lanabronze.vercel.app">
+        <div class="field-hint">É pra onde o botão "Ver site" aqui do painel leva.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- barra de salvar sempre visível -->
+  <div class="savebar">
+    <div class="info" id="save-info">As alterações entram no site assim que você salvar.</div>
+    <button class="btn" id="salvar-tudo">Salvar alterações</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://xahdtfrjcogvkmgelsre.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhaGR0ZnJqY29ndmttZ2Vsc3JlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyMzQ2OTMsImV4cCI6MjEwMjgxMDY5M30.kBZaU8BaEvr4QWqa5-CTnPaq8SUZss7fq-3ZSihjvFw';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const SLOTS = [
+    { slot:'hero',      label:'Foto principal',   desc:'Topo do site' },
+    { slot:'sobre',     label:'Foto do Sobre',    desc:'Lana trabalhando / estúdio' },
+    { slot:'galeria_1', label:'Galeria 1',        desc:'Resultado do bronze' },
+    { slot:'galeria_2', label:'Galeria 2',        desc:'Ambiente do estúdio' },
+    { slot:'galeria_3', label:'Galeria 3',        desc:'Produtos usados' },
+    { slot:'galeria_4', label:'Galeria 4',        desc:'Aplicação do bronze' },
+    { slot:'galeria_5', label:'Galeria 5',        desc:'Resultado do bronze' },
+    { slot:'galeria_6', label:'Galeria 6',        desc:'Detalhe / acabamento' },
+  ];
+
+  let combos = [];        // lista de combos em edição
+  let configOriginal = {}; // valores como vieram do banco
+
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
+
+  // ---------- LOGIN ----------
+  $('#login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('#login-btn'), msg = $('#login-msg');
+    msg.innerHTML = ''; btn.disabled = true; btn.textContent = 'Entrando...';
+
+    const { error } = await sb.auth.signInWithPassword({
+      email: $('#email').value.trim(),
+      password: $('#senha').value
+    });
+
+    btn.disabled = false; btn.textContent = 'Entrar';
+    if (error){
+      const txt = error.message === 'Invalid login credentials'
+        ? 'e-mail ou senha incorretos.' : error.message;
+      msg.innerHTML = `<div class="msg erro">Não foi possível entrar: ${txt}</div>`;
+      return;
+    }
+    showPanel();
+  });
+
+  $('#logout-btn').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    location.reload();
+  });
+
+  async function checkSession(){
+    const { data } = await sb.auth.getSession();
+    if (data.session) showPanel();
+  }
+
+  function showPanel(){
+    $('#login-screen').style.display = 'none';
+    $('#panel-screen').style.display = 'block';
+    testarConexao();
+    renderGrid();
+    loadConfig();
+  }
+
+  // ---------- ABAS ----------
+  $('#tabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-aba]');
+    if(!btn) return;
+    $$('.tabs button').forEach(b => b.classList.remove('ativa'));
+    $$('.painel').forEach(p => p.classList.remove('ativo'));
+    btn.classList.add('ativa');
+    $('#aba-' + btn.dataset.aba).classList.add('ativo');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+
+  // ---------- CONEXÃO ----------
+  async function testarConexao(){
+    const el = $('#conexao-status');
+    try{
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_settings?select=key&limit=1`, {
+        headers:{ apikey:SUPABASE_ANON_KEY, Authorization:`Bearer ${SUPABASE_ANON_KEY}` },
+        cache:'no-store'
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      await res.json();
+      el.className = 'msg sucesso';
+      el.textContent = 'Conectado — tudo que você salvar entra no site.';
+      setTimeout(() => { el.style.display = 'none'; }, 3500);
+    }catch(err){
+      el.className = 'msg erro';
+      el.textContent = 'Sem conexão com o banco neste ambiente. Abra o painel pelo endereço publicado do site.';
+    }
+  }
+
+  // ---------- CARREGAR CONFIGURAÇÕES ----------
+  async function loadConfig(){
+    const { data, error } = await sb.from('site_settings').select('key, value');
+    if (error) return;
+
+    configOriginal = {};
+    data.forEach(r => configOriginal[r.key] = r.value);
+
+    // campos de texto
+    $$('[data-cfg]').forEach(el => {
+      const v = configOriginal[el.dataset.cfg];
+      el.value = v == null ? '' : v;
+    });
+
+    // caixas de marcar (sim / não)
+    $$('[data-cfg-check]').forEach(el => {
+      const v = configOriginal[el.dataset.cfgCheck];
+      el.checked = String(v || '').toLowerCase() !== 'nao';
+    });
+
+    // combos
+    try{ combos = JSON.parse(configOriginal.combos || '[]'); }
+    catch(e){ combos = []; }
+    renderCombos();
+
+    // botão "Ver site"
+    const ver = $('#ver-site-btn');
+    if (configOriginal.site_url && configOriginal.site_url.trim()){
+      ver.href = configOriginal.site_url.trim();
+      ver.style.display = 'inline-flex';
+    }
+  }
+
+  // ---------- EDITOR DE COMBOS ----------
+  function renderCombos(){
+    const box = $('#combos-editor');
+    box.innerHTML = '';
+
+    if(!combos.length){
+      box.innerHTML = '<p class="hint" style="margin-bottom:16px;">Nenhum combo cadastrado ainda.</p>';
+      return;
+    }
+
+    combos.forEach((c, i) => {
+      const div = document.createElement('div');
+      div.className = 'combo-item';
+      div.innerHTML = `
+        <div class="combo-head">
+          <strong>${i + 1}. ${c.nome || 'Sem nome'}</strong>
+          <div class="combo-acoes">
+            <button class="icon-btn" data-mover="-1" data-i="${i}" title="Subir" type="button">↑</button>
+            <button class="icon-btn" data-mover="1" data-i="${i}" title="Descer" type="button">↓</button>
+            <button class="icon-btn danger" data-remover="${i}" title="Remover" type="button">✕</button>
+          </div>
+        </div>
+
+        <label>Nome do combo</label>
+        <input type="text" data-campo="nome" data-i="${i}" value="${esc(c.nome)}">
+
+        <label>Descrição</label>
+        <textarea data-campo="desc" data-i="${i}" style="min-height:80px;">${esc(c.desc)}</textarea>
+
+        <div class="linha-dupla">
+          <div>
+            <label>Preço antigo (riscado)</label>
+            <input type="text" data-campo="de" data-i="${i}" value="${esc(c.de)}" placeholder="Ex: R$ 100">
+          </div>
+          <div>
+            <label>Preço atual</label>
+            <input type="text" data-campo="por" data-i="${i}" value="${esc(c.por)}" placeholder="Ex: R$ 85,00">
+          </div>
+        </div>
+
+        <div class="linha-dupla">
+          <div>
+            <label>Observação do preço</label>
+            <input type="text" data-campo="nota" data-i="${i}" value="${esc(c.nota)}" placeholder="Ex: combo completo">
+          </div>
+          <div>
+            <label>Etiqueta de destaque</label>
+            <input type="text" data-campo="selo" data-i="${i}" value="${esc(c.selo)}" placeholder="Ex: Mais completo">
+          </div>
+        </div>
+
+        <div class="check-linha">
+          <input type="checkbox" data-campo="destaque" data-i="${i}" ${c.destaque ? 'checked' : ''}>
+          <label style="margin:0;">Card em destaque (fundo escuro)</label>
+        </div>
+      `;
+      box.appendChild(div);
+    });
+  }
+
+  function esc(v){
+    return String(v == null ? '' : v)
+      .replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // edições nos campos dos combos
+  $('#combos-editor').addEventListener('input', (e) => {
+    const el = e.target;
+    if(!el.dataset.campo) return;
+    const i = Number(el.dataset.i);
+    combos[i][el.dataset.campo] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+
+  // botões de mover e remover
+  $('#combos-editor').addEventListener('click', (e) => {
+    const mover = e.target.closest('[data-mover]');
+    const remover = e.target.closest('[data-remover]');
+
+    if(mover){
+      const i = Number(mover.dataset.i);
+      const destino = i + Number(mover.dataset.mover);
+      if(destino < 0 || destino >= combos.length) return;
+      [combos[i], combos[destino]] = [combos[destino], combos[i]];
+      renderCombos();
+    }
+
+    if(remover){
+      const i = Number(remover.dataset.remover);
+      if(!confirm(`Remover o combo "${combos[i].nome || 'sem nome'}" do site?`)) return;
+      combos.splice(i, 1);
+      renderCombos();
+    }
+  });
+
+  $('#add-combo').addEventListener('click', () => {
+    combos.push({ nome:'Novo combo', desc:'', de:'', por:'', nota:'', selo:'', destaque:false });
+    renderCombos();
+    $('#combos-editor').lastElementChild.scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+
+  // ---------- SALVAR TUDO ----------
+  $('#salvar-tudo').addEventListener('click', async () => {
+    const btn = $('#salvar-tudo'), info = $('#save-info');
+    btn.disabled = true; btn.textContent = 'Salvando...';
+
+    // monta só o que mudou, pra não gravar à toa
+    const novos = {};
+    $$('[data-cfg]').forEach(el => {
+      let v = el.value.trim();
+      if(el.dataset.cfg === 'site_url' && v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
+      if(el.dataset.cfg === 'whatsapp') v = v.replace(/\D/g, '');
+      if(el.dataset.cfg === 'instagram') v = v.replace(/^@/, '').replace(/^.*instagram\.com\//, '').replace(/\/$/, '');
+      novos[el.dataset.cfg] = v || null;
+    });
+    $$('[data-cfg-check]').forEach(el => {
+      novos[el.dataset.cfgCheck] = el.checked ? 'sim' : 'nao';
+    });
+    novos.combos = JSON.stringify(combos);
+
+    const mudou = Object.entries(novos)
+      .filter(([k, v]) => (configOriginal[k] || null) !== (v || null));
+
+    if(!mudou.length){
+      info.textContent = 'Nada mudou desde a última vez.';
+      btn.disabled = false; btn.textContent = 'Salvar alterações';
+      return;
+    }
+
+    try{
+      const agora = new Date().toISOString();
+      for(const [k, v] of mudou){
+        const { error } = await sb.from('site_settings')
+          .update({ value: v, updated_at: agora }).eq('key', k);
+        if(error) throw error;
+      }
+      mudou.forEach(([k, v]) => configOriginal[k] = v);
+      info.innerHTML = `<span style="color:#2E6B23;font-weight:600;">Salvo! ${mudou.length} alteração(ões) já estão no site.</span>`;
+      setTimeout(() => { info.textContent = 'As alterações entram no site assim que você salvar.'; }, 5000);
+
+      const ver = $('#ver-site-btn');
+      if(novos.site_url){ ver.href = novos.site_url; ver.style.display = 'inline-flex'; }
+    }catch(err){
+      info.innerHTML = '<span style="color:#9A3A16;font-weight:600;">Erro ao salvar. Tente de novo.</span>';
+      console.error(err);
+    }finally{
+      btn.disabled = false; btn.textContent = 'Salvar alterações';
+    }
+  });
+
+  // ---------- FOTOS ----------
+  function renderGrid(){
+    const grid = $('#assets-grid');
+    grid.innerHTML = '';
+    SLOTS.forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="thumb" id="thumb-${s.slot}"><span class="empty-icon">☀︎</span></div>
+        <div class="body">
+          <div class="slot-name">${s.label}</div>
+          <div class="slot-desc">${s.desc}</div>
+          <label class="upload-label" for="file-${s.slot}">Trocar foto</label>
+          <input type="file" id="file-${s.slot}" accept="image/*">
+          <button class="remove-btn" id="remove-${s.slot}" type="button">Remover foto</button>
+          <div class="status" id="status-${s.slot}"></div>
+        </div>
+      `;
+      grid.appendChild(card);
+      $(`#file-${s.slot}`).addEventListener('change', (e) => handleUpload(s.slot, e.target.files[0]));
+      $(`#remove-${s.slot}`).addEventListener('click', () => handleRemove(s.slot));
+    });
+    loadCurrentImages();
+  }
+
+  async function loadCurrentImages(){
+    const { data, error } = await sb.from('site_assets').select('slot, image_url');
+    if (error) return;
+    data.forEach(row => {
+      if (!row.image_url) return;
+      const thumb = $(`#thumb-${row.slot}`), rm = $(`#remove-${row.slot}`);
+      if (thumb) thumb.innerHTML = `<img src="${row.image_url}" alt="">`;
+      if (rm) rm.style.display = 'block';
+    });
+  }
+
+  // reduz a imagem no navegador antes de enviar
+  function compressImage(file, maxSize = 1600, quality = 0.82){
+    return new Promise((resolve, reject) => {
+      const img = new Image(), reader = new FileReader();
+      reader.onload = (e) => { img.src = e.target.result; };
+      reader.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxSize){ height = height * (maxSize / width); width = maxSize; }
+        else if (height > maxSize){ width = width * (maxSize / height); height = maxSize; }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+      };
+      img.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleUpload(slot, file){
+    if (!file) return;
+    const st = $(`#status-${slot}`);
+    st.className = 'status enviando'; st.textContent = 'Enviando...';
+
+    try{
+      const comprimida = await compressImage(file);
+      const path = `${slot}-${Date.now()}.jpg`;
+
+      const { error: upErr } = await sb.storage.from('site-images')
+        .upload(path, comprimida, { contentType:'image/jpeg', upsert:false });
+      if (upErr) throw upErr;
+
+      const url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
+
+      const { error: updErr } = await sb.from('site_assets')
+        .update({ image_url: url, updated_at: new Date().toISOString() }).eq('slot', slot);
+      if (updErr) throw updErr;
+
+      $(`#thumb-${slot}`).innerHTML = `<img src="${url}" alt="">`;
+      $(`#remove-${slot}`).style.display = 'block';
+      st.className = 'status ok'; st.textContent = 'Publicado ✓';
+      setTimeout(() => { st.textContent = ''; }, 3000);
+    }catch(err){
+      st.className = 'status erro-txt'; st.textContent = 'Erro ao enviar.';
+      console.error(err);
+    }
+  }
+
+  async function handleRemove(slot){
+    if (!confirm('Remover essa foto do site?')) return;
+    const st = $(`#status-${slot}`);
+    st.className = 'status enviando'; st.textContent = 'Removendo...';
+
+    try{
+      const { data: row } = await sb.from('site_assets')
+        .select('image_url').eq('slot', slot).single();
+
+      const { error } = await sb.from('site_assets')
+        .update({ image_url: null, updated_at: new Date().toISOString() }).eq('slot', slot);
+      if (error) throw error;
+
+      if (row && row.image_url){
+        await sb.storage.from('site-images').remove([row.image_url.split('/').pop()]);
+      }
+
+      $(`#thumb-${slot}`).innerHTML = '<span class="empty-icon">☀︎</span>';
+      $(`#remove-${slot}`).style.display = 'none';
+      st.className = 'status ok'; st.textContent = 'Removida ✓';
+      setTimeout(() => { st.textContent = ''; }, 3000);
+    }catch(err){
+      st.className = 'status erro-txt'; st.textContent = 'Erro ao remover.';
+      console.error(err);
+    }
+  }
+
+  checkSession();
+</script>
+
+</body>
+</html>
